@@ -1,13 +1,13 @@
 
 
-
+import CaloriesForm from "../componets/CaloriesForm";
 
 const application = () => {
 
   return (
-    <>
-    application
-    </>
+    <div className="form-container">
+    <CaloriesForm />
+    </div>
   );
 };
 
