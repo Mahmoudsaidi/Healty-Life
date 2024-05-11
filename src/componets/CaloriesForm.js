@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './CaloriesForm.css';
-import MealSuggestions from './MealSuggestions'; 
+import { useNavigate } from 'react-router-dom';
 
 function CalorieCalculatorForm() {
   const [age, setAge] = useState('');
@@ -10,31 +10,33 @@ function CalorieCalculatorForm() {
   const [activityLevel, setActivityLevel] = useState('');
   const [calorieNeeds, setCalorieNeeds] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [mealSuggestions, setMealSuggestions] = useState([]);
+  const Navigate = useNavigate();
+
 
   useEffect(() => {
     if (calorieNeeds !== null) {
-      fetchMealSuggestions();
+      
     }
   }, [calorieNeeds]);
 
-  const fetchMealSuggestions = () => {
-    // Call your meal suggestion API here
-    // Example:
-    // fetch('https://api.example.com/meals?calories=' + calorieNeeds)
-    //   .then(response => response.json())
-    //   .then(data => setMealSuggestions(data))
-    //   .catch(error => console.error('Error fetching meal suggestions:', error));
-
-    // Dummy data for demonstration
-    const dummyData = [
-      { name: 'Grilled Chicken Salad', calories: 350 },
-      { name: 'Vegetable Stir Fry', calories: 400 },
-      { name: 'Salmon with Quinoa', calories: 450 }
-    ];
-    setMealSuggestions(dummyData);
+  const HandleMealSuggestions = ({ calorieNeeds, age, gender, weight, height, activityLevel }) => {
+    if (calorieNeeds === null) {
+      return null;
+    }
+  
+    // Prepare data to be passed to the Meal Suggestions page
+    const mealSuggestionsData = {
+      age,
+      gender,
+      weight,
+      height,
+      activityLevel,
+      calorieNeeds
+    };
+  
+    // Return the prepared data
+    return mealSuggestionsData;
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -89,6 +91,24 @@ function CalorieCalculatorForm() {
 
     // Display the result
     setCalorieNeeds(calculatedCalorieNeeds);
+  };
+  const handleClick = () => {
+    const mealSuggestionsData = HandleMealSuggestions({
+      calorieNeeds,
+      age,
+      gender,
+      weight,
+      height,
+      activityLevel
+    });
+
+    if (mealSuggestionsData) {
+      // Navigate to the meal suggestions page
+      Navigate({
+        pathname: '/meal-suggestions',
+        state: mealSuggestionsData
+      });
+    }
   };
 
   return (
@@ -167,7 +187,8 @@ function CalorieCalculatorForm() {
           <h3>Calorie Needs:</h3>
           <p>{calorieNeeds} calories per day</p>
              {/*button for meal suggestions*/}
-          <button type="Button">Meal Suggestions</button>
+          <button type="Button" onClick={handleClick} >Meal Suggestions</button>
+          
           <h5>Powered by ChatGPT</h5>
         </div>  
       )}
