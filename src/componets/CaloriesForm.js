@@ -101,13 +101,10 @@ function CalorieCalculatorForm() {
       height,
       activityLevel
     });
-
+  
     if (mealSuggestionsData) {
       // Navigate to the meal suggestions page
-      Navigate({
-        pathname: '/meal-suggestions',
-        state: mealSuggestionsData
-      });
+      Navigate('/meal-suggestions', { state: mealSuggestionsData });
     }
   };
 
@@ -187,7 +184,7 @@ function CalorieCalculatorForm() {
           <h3>Calorie Needs:</h3>
           <p>{calorieNeeds} calories per day</p>
              {/*button for meal suggestions*/}
-          <button type="Button" onClick={handleClick} >Meal Suggestions</button>
+          <button onClick={handleClick} >Meal Suggestions</button>
           
           <h5>Powered by ChatGPT</h5>
         </div>  
