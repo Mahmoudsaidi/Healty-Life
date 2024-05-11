@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CaloriesForm.css';
+import MealSuggestions from './MealSuggestions'; 
 
 function CalorieCalculatorForm() {
   const [age, setAge] = useState('');
@@ -9,13 +10,54 @@ function CalorieCalculatorForm() {
   const [activityLevel, setActivityLevel] = useState('');
   const [calorieNeeds, setCalorieNeeds] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [mealSuggestions, setMealSuggestions] = useState([]);
+
+  useEffect(() => {
+    if (calorieNeeds !== null) {
+      fetchMealSuggestions();
+    }
+  }, [calorieNeeds]);
+
+  const fetchMealSuggestions = () => {
+    // Call your meal suggestion API here
+    // Example:
+    // fetch('https://api.example.com/meals?calories=' + calorieNeeds)
+    //   .then(response => response.json())
+    //   .then(data => setMealSuggestions(data))
+    //   .catch(error => console.error('Error fetching meal suggestions:', error));
+
+    // Dummy data for demonstration
+    const dummyData = [
+      { name: 'Grilled Chicken Salad', calories: 350 },
+      { name: 'Vegetable Stir Fry', calories: 400 },
+      { name: 'Salmon with Quinoa', calories: 450 }
+    ];
+    setMealSuggestions(dummyData);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic form validation
     if (!age || !gender || !weight || !height || !activityLevel) {
       setErrorMessage('Please fill in all fields');
+      return;
+    }
+    
+    // Define limits for height and weight
+    const minHeight = 127; 
+    const maxHeight = 213; 
+    const minWeight = 23; 
+    const maxWeight = 227; 
+    
+    // Check if height is within limits
+    if (height < minHeight || height > maxHeight) {
+      setErrorMessage('Please enter a valid height between 127 and 213 centimeters');
+      return;
+    }
+    
+    // Check if weight is within limits
+    if (weight < minWeight || weight > maxWeight) {
+      setErrorMessage('Please enter a valid weight between 23 and 227 kilograms');
       return;
     }
 
@@ -24,7 +66,6 @@ function CalorieCalculatorForm() {
       return;
     }
 
-    // Calculate BMR based on Mifflin-St Jeor Equation
     let bmr = 0;
     if (gender === 'male') {
       bmr = 10 * weight + 6.25 * height - 5 * age + 5;
@@ -119,16 +160,18 @@ function CalorieCalculatorForm() {
             </select>
           </label>
         </div>
-        <button type="submit">Calculate</button>
+        <button type="submit">Calculate</button> 
       </form>
-
-      {/* Display calorie needs result */}
       {calorieNeeds !== null && (
         <div className="result">
           <h3>Calorie Needs:</h3>
           <p>{calorieNeeds} calories per day</p>
-        </div>
+             {/*button for meal suggestions*/}
+          <button type="Button">Meal Suggestions</button>
+          <h5>Powered by ChatGPT</h5>
+        </div>  
       )}
+      
     </div>
   );
 }
